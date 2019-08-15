@@ -1,0 +1,84 @@
+.page-container {
+    display: flexbox;
+    padding: 2%
+}
+.page-row{
+    display: flex;
+    flex-direction: row;
+}
+.basic-box {
+    margin: 2%;
+    padding: 2%;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px #999
+}
+.topics{
+    padding: 5%
+}
+
+.topics button, .topics input{
+    width: 100%;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem 0;
+    text-align: left;
+    border-radius: 15px;
+    background-color:transparent;
+    border: 1px solid #999;
+    color: #999;
+}
+.topics input{
+    width: 81%;
+}
+.topics button.active{
+    color: #eee;
+    background-color:rgba(49, 49, 255, 0.95);
+}
+.topics button:hover{
+    color: #444;
+}
+.topics button span{
+    float: right;
+}
+/* For desktop: */
+.column-1 {width: 8.33%;}
+.column-2 {width: 16.66%;}
+.column-3 {width: 25%;}
+.column-4 {width: 33.33%;}
+.column-5 {width: 41.66%;}
+.column-6 {width: 50%;}
+.column-7 {width: 58.33%;}
+.column-8 {width: 66.66%;}
+.column-9 {width: 75%;}
+.column-10 {width: 83.33%;}
+.column-11 {width: 91.66%;}
+.column-12 {width: 100%;}
+
+.column-3 span{
+    display: block;
+    text-align: center;
+}
+
+h3{
+    text-align: center
+}
+
+.tick line {
+    stroke: #ccc
+}
+
+.sline{
+    stroke: #ffffff;
+    stroke-width: 2px;
+}
+
+.words{
+    color: #3718ec;
+    stroke: #3718ec
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  [class*="column-"] {
+    width: 100%;
+  }
+}

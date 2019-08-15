@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="assets/js/d3.js"></script>
+    <script src="assets/js/viz.min.js"></script>
+    <script src="assets/js/index.js" type="module"></script>
+    <script src="assets/js/word.js" type="module"></script>
+    <script src="assets/js/chord.js" type="module"></script>
+    
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-row">
+            <div class="column-2">
+                <div class="basic-box topics">
+                    <h4>Topics</h4>
+                    <div>
+                        <input type="text">
+                    </div>
+                    <div id="buttons">
+                        <!-- <button>Topic 1 <span>-</span></button> -->
+                    </div>
+                </div>
+            </div>
+            <div class="column-10">
+                <div class="basic-box">
+                    <svg id="multiArea" height="250" width="900"></svg>
+                </div>
+                <div class="basic-box">
+                    <div class="page-row">
+                        <div class="column-3">
+                            <span>Blog Distribution</span>
+                            <h3 id="blog-dist">90%</h3>
+                        </div>
+                        <div class="column-3">
+                            <span>Blogger's Mentioned</span>
+                            <h3 id="blog-mentioned">20</h3>
+                        </div>
+                        <div class="column-3">
+                            <span>Posts Mentioned</span>
+                            <h3 id="post-mentioned">400</h3>
+                        </div>
+                        <div class="column-3">
+                            <span>Top Posting Location</span>
+                            <h3 id="post-location">United States</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page-row">
+            <div class="column-4">
+                <div class="basic-box" id="word">
+                    <!-- <svg></svg> -->
+                </div>
+            </div>
+            <div class="column-4">
+                <div class="basic-box" id="chord">
+                    <!-- <svg></svg> -->
+                </div>
+            </div>
+            <div class="column-4">
+                <div class="basic-box" id="point">
+                    <!-- <svg></svg> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
