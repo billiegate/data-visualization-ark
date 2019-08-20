@@ -58,9 +58,7 @@ const updateStat = () => {
         highestBlogger = bloggers[d.name] > highestBlogger ? bloggers[d.name] : highestBlogger;
         blogCount++
     })
-    
     select('#blog-mentioned').text( highestBlogger )
-    
     select('#post-mentioned').text( blogCount )
 }
 
@@ -172,7 +170,7 @@ const constructAreaChat = () => {
 const constructScatterChat = () => {
     const scattered = select('#point').append("svg").attr("height",300).attr("width",300);
     const scatteredG = scattered.append('g');
-    scatteredG.append('text').text('keywords of topic 1  from last week post').attr('transform', `translate(0, 15)`)
+    scatteredG.append('text').text('Posts from topic 1 of past week').attr('transform', `translate(0, 15)`)
     const circleG = scattered.append('g').attr('transform', `translate(0, 35)`);
     circleG.selectAll('circle')
         .data(words).enter()

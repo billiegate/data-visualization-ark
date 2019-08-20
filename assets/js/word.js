@@ -51,8 +51,11 @@ const words = [
     },
 ]
 var width=300, height=300
-const svg = d3.select('#word').append("svg").attr("height",height).attr("width",width);
-svg.selectAll('g')
+const scatteredText = d3.select('#word').append("svg").attr("height",height).attr("width",width);
+const scatteredTextG = scatteredText.append('g');
+scatteredTextG.append('text').text('keywords of topic 1  from last week post').attr('transform', `translate(0, 15)`)
+const scatteredTextWord = scatteredText.append('g').attr('transform', `translate(0, 35)`);
+scatteredTextWord.selectAll('g')
     .data(words).enter()
     .append('g')
     .attr("transform", d => `translate (${d.xpos * 10}, ${d.ypos * 10})`)
