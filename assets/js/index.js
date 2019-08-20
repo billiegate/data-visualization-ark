@@ -1,3 +1,4 @@
+'use-strict'
 // import { selectorAll } from './d3.js'
 const selectAll = d3.selectAll
 const select = d3.select
@@ -25,30 +26,32 @@ const areaWidth = width - margin.left - margin.rigth
 // const width=300
 // const height=300
 
-fetch('http://localhost:8080/sample-data/rest/post', {
-    headers : { 
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-     }
 
-  })
+const parseJson = r => {
+    let _r = r.substr(1, r.length - 2).split("},{");
+            
+    return _r.map( v => {
+        let _v = v.split(", ");
+        let obj = {};
+        _v.forEach( d => {
+            let _d = d.split(": ");
+            obj[_d[0].trim()] = _d[0].trim() == 'comments' || _d[0].trim() == 'likes' || _d[0].trim() == 'population' ? parseInt(_d[1].trim()) : _d[1].trim().replace(/\'/g, '');
+        });
+        return obj;
+    });
+};
+		
+
+fetch('http://localhost:8080/sample-data/rest/post')
     .then( function(res){
         
-        res.json().then(r => {
-            console.dir(r);
-            let a1 = [];
-            a1.push(r);
-            //console.log(JSON.parse(JSON.stringify(r)))
-            const options = Object.keys(a1[0]);
-            var svg = d3.select("#buttons")
-                .selectAll('button')
-                .data(options)
-                .enter()
-                .append("button")
-                .text(d => d)
-                .append("span")
-                .text("-");
-
+        res.text().then(r => {
+            
+            let a1 = parseJson(r)
+            
+            const options = Object.keys(a1[0])
+            var svg = d3.select("#buttons").selectAll('button').data(options).enter().append("button").text(d => d).append("span").text("-");
+            
             const bloggers = {}
             let highestBlogger = 0;
             let blogCount = 0;
@@ -61,11 +64,11 @@ fetch('http://localhost:8080/sample-data/rest/post', {
                 highestBlogger = bloggers[d.name] > highestBlogger ? bloggers[d.name] : highestBlogger;
                 blogCount++
             })
-
+            
             select('#blog-mentioned').text( highestBlogger )
-
+            
             select('#post-mentioned').text( blogCount )
-
+            
             const words = Object.keys(bloggers).map( v => { return {
                 'xpos': bloggers[v], 
                 'magn': Object.values(a1).reduce( (r, d) => {
@@ -86,10 +89,10 @@ fetch('http://localhost:8080/sample-data/rest/post', {
                         }
                         return r
                     }),
-            }})
-
+                }})
             
-
+                
+            
             const xValue = d => new Date(d.timestamp)
             const yValue = d => d.population
             const yScale = scaleLinear()
@@ -98,10 +101,10 @@ fetch('http://localhost:8080/sample-data/rest/post', {
             const xScale = scaleTime()
                             .domain( extent(a1, xValue ))
                             .range([0, areaWidth])
-
+            
             const g = svgArea.append('g')
                     .attr('transform', `translate (${margin.rigth}, ${margin.top})`)
-
+            
                 g.append('g')
                     .call(axisLeft(yScale).tickSize(-areaWidth))
                     .selectAll('path')
@@ -109,57 +112,57 @@ fetch('http://localhost:8080/sample-data/rest/post', {
                 // g.append('g')
                 //     .call(axisBottom(xScale))
                 //     .attr('transform', `translate (0, ${areaHeight})`)
-            
-            g.append('text').text('Countries population')
-            const nData = []
-            // const nestedData = next().key( d => d.country ).entries( a1 )
-            a1.forEach( cData => {
-                let foundIndex = -1
-                nData.forEach(( _nData, i) => {
-                    if(_nData.key == cData.country){
-                        foundIndex = i;
-                        nData[i]['values'].push(cData)
-                        return;
-                    }
-                })
-                if(foundIndex == -1) {
-                    nData.push({
-                        key: cData.country,
-                        values : [cData]
-                    })
-                }
                 
-            })
-
-            let indX = 0;
-            let nIndV = [];
-            const yArea0 = d => yScale(nIndV[nData[indX+1].values.indexOf(d)]['population'])
-            const yArea1 = d => yScale(yValue(d))
-            const areaColors = ['#065eeb', '#9fa3aa', '#222325']
-
-            const lg = area()
-                .x(d => xScale( xValue(d)))
-                .y0(yArea0)
-                .y1(yArea1)
-                .curve(curveBasis)
-            
-            // const colorScheme = scaleOrdinal(schemeCategory10).domain(nData.map( d => d.key))
-
-            g.selectAll('.line-path')
-                .data(nData)
-                .enter()
-                .append('path')
-                .attr('d', (d, i) => { 
-                    indX = i - 1
-                    if(i > 0){
-                        nIndV = nData[indX]['values'];
-                        return lg(d.values)
+                g.append('text').text('Countries population')
+                const nData = []
+                // const nestedData = next().key( d => d.country ).entries( a1 )
+                a1.forEach( cData => {
+                    let foundIndex = -1
+                    nData.forEach(( _nData, i) => {
+                        if(_nData.key == cData.country){
+                            foundIndex = i;
+                            nData[i]['values'].push(cData)
+                            return;
+                        }
+                    })
+                    if(foundIndex == -1) {
+                        nData.push({
+                            key: cData.country,
+                            values : [cData]
+                        })
                     }
+                    
                 })
-                .attr('class', 'sline')
-                .attr('fill', (d, i) => areaColors[i-1])
-
-
+            
+                let indX = 0;
+                let nIndV = [];
+                const yArea0 = d => yScale(nIndV[nData[indX+1].values.indexOf(d)]['population'])
+                const yArea1 = d => yScale(yValue(d))
+                const areaColors = ['#065eeb', '#9fa3aa', '#222325']
+            
+                const lg = area()
+                    .x(d => xScale( xValue(d)))
+                    .y0(yArea0)
+                    .y1(yArea1)
+                    .curve(curveBasis)
+                
+                // const colorScheme = scaleOrdinal(schemeCategory10).domain(nData.map( d => d.key))
+            
+                g.selectAll('.line-path')
+                    .data(nData)
+                    .enter()
+                    .append('path')
+                    .attr('d', (d, i) => { 
+                        indX = i - 1
+                        if(i > 0){
+                            nIndV = nData[indX]['values'];
+                            return lg(d.values)
+                        }
+                    })
+                    .attr('class', 'sline')
+                    .attr('fill', (d, i) => areaColors[i-1])
+            
+            
             const scattered = select('#point').append("svg").attr("height",300).attr("width",300);
             const scatteredG = scattered.append('g');
             scatteredG.append('text').text('keywords of topic 1  from last week post').attr('transform', `translate(0, 5)`)
@@ -170,9 +173,9 @@ fetch('http://localhost:8080/sample-data/rest/post', {
                 .attr("cy", d => d.likes)
                 .attr("r", d => Math.abs(d.magn)/2)
                 .attr('fill', '#000');
-
+            
             // const words = a1.filter( d => d.population > 23);
             // console.log(words)
-
-    })
-})
+            
+    });
+});
