@@ -119,7 +119,7 @@ const constructAreaChat = () => {
         .selectAll('path')
         .remove()
                     
-    g.append('text').text('Countries population')
+    g.append('text').text('Topics trends of post Week')
     const nData = []
     // const nestedData = next().key( d => d.country ).entries( a1 )
     a1.forEach( cData => {
