@@ -33,21 +33,6 @@ let highestBlogger = 0;
 let blogCount = 0;
 
 
-const parseJson = r => {
-    let _r = r.substr(1, r.length - 2).split("},{");
-            
-    return _r.map( v => {
-        let _v = v.split(", ");
-        let obj = {};
-        _v.forEach( d => {
-            let _d = d.split(": ");
-            obj[_d[0].trim()] = _d[0].trim() == 'comments' || _d[0].trim() == 'likes' || _d[0].trim() == 'population' ? parseInt(_d[1].trim()) : _d[1].trim().replace(/\'/g, '');
-        });
-        return obj;
-    });
-};
-
-
 const updateStat = () => {
     a1.forEach( d  => {
         if(Object.keys(bloggers).indexOf(d.name) > -1) {
@@ -182,16 +167,18 @@ const constructScatterChat = () => {
 }
 		
 
-fetch('http://localhost:8080/sample-data/rest/post')
+fetch('http://localhost:8080/post', {
+    headers: {
+        "content-type": "application/json"
+    }
+  })
     .then( function(res){
-        res.text().then(r => {
-            a1 = parseJson(r)
+        res.json().then(r => {
+            a1 = r
             buildOptions()
             updateStat();
             prepWord()
             constructAreaChat()
             constructScatterChat()
-            // const words = a1.filter( d => d.population > 23);
-            // console.log(words)
     });
 });
