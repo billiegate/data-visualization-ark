@@ -19,11 +19,11 @@
 .topics button, .topics input{
     width: 100%;
     padding: 0.5rem 1rem;
-    margin: 0.5rem 0;
+    margin: 1rem 0;
     text-align: left;
     border-radius: 15px;
     background-color:transparent;
-    border: 1px solid #999;
+    border: 2px solid #999;
     color: #999;
 }
 .topics input{
@@ -35,6 +35,7 @@
 }
 .topics button:hover{
     color: #444;
+    border-color: #444;
 }
 .topics button span{
     float: right;
@@ -75,10 +76,14 @@ h3{
     color: #3718ec;
     stroke: #3718ec
 }
-
+#point text {
+    font-weight: bold;
+}
 @media only screen and (max-width: 768px) {
-  /* For mobile phones: */
-  [class*="column-"] {
-    width: 100%;
-  }
+
+    .column-2 {width: 100%;}
+    .column-4 {width: 100%;}
+    .column-10 {width: 100%;}
+    .column-11 {width: 100%;}
+    .column-12 {width: 100%;}
 }

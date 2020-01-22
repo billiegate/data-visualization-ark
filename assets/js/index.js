@@ -28,27 +28,25 @@ const areaWidth = width - margin.left - margin.rigth
 
 let a1 = []; //to hold dummy data
 let words =  []; //
-const bloggers = {}
+let bloggers = {}
 let highestBlogger = 0;
-let blogCount = 0;
 
 
 const updateStat = () => {
-    a1.forEach( d  => {
-        if(Object.keys(bloggers).indexOf(d.name) > -1) {
-            bloggers[d.name] += 1;
-        } else {
-            bloggers[d.name] = 1;
-        }
-        highestBlogger = bloggers[d.name] > highestBlogger ? bloggers[d.name] : highestBlogger;
-        blogCount++
-    })
+    bloggers = a1.reduce((blogers, blog, i) => {
+        blogers[blog.name] = Object.keys(blogers).indexOf(blog.name) > -1 ? blogers[blog.name] + 1: 1;
+        highestBlogger = blogers[blog.name] > highestBlogger ? blogers[blog.name] : highestBlogger;
+        return blogers
+    }, {});
     select('#blog-mentioned').text( highestBlogger )
-    select('#post-mentioned').text( blogCount )
+    select('#post-mentioned').text( a1.length )
 }
 
 const buildOptions = () => {
-    const options = Object.keys(a1[0])
+    let excluded = ['id', 'timestamp', 'likes'];
+    const options = Object.keys(a1[0]).filter((menu) => {
+        return !excluded.includes(menu)
+    })
     select("#buttons")
         .selectAll('button')
         .data(options).enter()
@@ -103,25 +101,19 @@ const constructAreaChat = () => {
         .remove()
                     
     g.append('text').text('Topics trends of post Week')
-    const nData = []
-    // const nestedData = next().key( d => d.country ).entries( a1 )
-    a1.forEach( cData => {
-        let foundIndex = -1
-        nData.forEach(( _nData, i) => {
-            if(_nData.key == cData.country){
-                foundIndex = i;
-                nData[i]['values'].push(cData)
-                return;
-            }
-        })
-        if(foundIndex == -1) {
-            nData.push({
-                key: cData.country,
-                values : [cData]
-            })
+    
+    let found_keys = [];
+    const nData = a1.reduce((t, v, i) => {
+        if(found_keys.includes(v.country)) {
+            let _i = found_keys.indexOf(v.country)
+            t[_i]['values'].push(v)
+        } else {
+            found_keys.push(v.country)
+            t.push({key:v.country, values: [v]})
         }
-    })
-            
+        return t;
+    }, []);
+    
     let indX = 0;
     let nIndV = [];
     const yArea0 = d => yScale(nIndV[nData[indX+1].values.indexOf(d)]['population'])
@@ -175,6 +167,7 @@ fetch('http://localhost:8080/post', {
     .then( function(res){
         res.json().then(r => {
             a1 = r
+            console.log(a1)
             buildOptions()
             updateStat();
             prepWord()
